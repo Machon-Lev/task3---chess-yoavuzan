@@ -1,21 +1,14 @@
 #pragma once
-class Board;
+#include "Loction.h"
+#include "Color.h"
+
 class Peice
 {
+private:
+	Color color;
 public:
-	Board board();
-	enum class Color { White = 1, Black };
 	Peice(Color color);
 	Color GetColor(){ return color;}
-	char GetPeice()=0;
-	void move(int x, int y) = 0;
-	getAviableMoves() = 0;
-private:
-		Color color;
+	virtual char GetPeice() = 0;
 
 };
-
-Peices::Peices(Color col)
-{
-	color=col
-}

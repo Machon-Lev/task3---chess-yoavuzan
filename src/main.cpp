@@ -1,10 +1,12 @@
 // Chess 
 #include "Chess.h"
-
+#include"Board.h"
+#include"Peice.h"
 int main()
 {
-	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
-//	string board = "##########K###############################R#############r#r#####";
+	//	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
+	string board = "##########K###############################R#############r#r#####";
+	Board boardParm(board);
 	Chess a(board);
 	int codeResponse = 0;
 	string res = a.getInput();
@@ -26,8 +28,14 @@ int main()
 
 		/**/ 
 		{ // put your code here instead that code
-			cout << "code response >> ";
-			cin >> codeResponse;
+			try
+			{
+				codeResponse = boardParm.getResponse(res);
+			}
+			catch (const std::exception& e)
+			{
+				cout << e.what() << endl;
+			}
 		}
 		/**/
 

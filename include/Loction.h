@@ -1,8 +1,9 @@
+#pragma once
 struct Loction
 {
 	char x = ' ';
 	int y = -1;
-	Loction(char x, int y) : 
+	Loction(char x, int y) 
 	{
 		if (checkLoction(x, y))
 		{
@@ -13,7 +14,7 @@ struct Loction
 
 	bool checkLoction(char x, int y)
 	{
-		return x >= 'A' && x <= 'H' && y >= 1 && y <= 8;
+		return x >= 'a' && x <= 'h' && y >= 1 && y <= 8;
 	}
 
 	bool isEmpty()
@@ -21,40 +22,37 @@ struct Loction
 		return x == ' ' && y == -1;
 	}
 
-	operator ==(const Loction& other) const
+	bool operator == (const Loction& other) const
 	{
 		return x == other.x && y == other.y;
 	}	
-	operator !=(const Loction& other) const
+	bool operator !=(const Loction& other) const
 	{
 		return !(*this == other);
 	}	
-	operator >(const Loction& other) const
+	bool operator >(const Loction& other) const
 	{
 		return x > other.x && y > other.y;
 	}
-	operator <(const Loction& other) const
+	bool operator <(const Loction& other) const
 	{
 		return x < other.x && y < other.y;
 	}
-	operator >=(const Loction& other) const
+	bool operator >=(const Loction& other) const
 	{
 		return !(*this < other);
 	}
-	operator <=(const Loction& other) const
+	bool operator <=(const Loction& other) const
 	{
 		return !(*this > other);
 	}
-	operator +(const Loction& other) const
+	Loction operator +(const Loction& other) const
 	{
 		return Loction(x + other.x, y + other.y);
 	}
-	operator -(const Loction& other) const
+	Loction operator -(const Loction& other) const
 	{
 		return Loction(x - other.x, y - other.y);
 	}
-	operator +=(const Loction& other) const
-	{
-		return *this = *this + other;
-	}
+
 };

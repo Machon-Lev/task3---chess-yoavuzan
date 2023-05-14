@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.15)
 
-project (chessProject)
+project (Task3_Yoav_Uzan)
 
 # New CMake versions map C++20 to /std:c++20 instead of c++latest, so <format>
 # and other unstable ABI features aren't supported. Use C++23 for such versions
@@ -17,8 +17,9 @@ if (MSVC)
     add_compile_options (/W4 /permissive- /Zc:externConstexpr /Zc:inline)
 endif ()
 
-add_executable (chessProject "include/Chess.h" "include/Board.h" "include/Rook.h"
-"src/Chess.cpp" "src/main.cpp" "include/Peice.h"  "include/King.h" "include/Loction.h")
+add_executable (Task3_Yoav_Uzan "include/Chess.h" "include/Board.h" "include/Rook.h"
+"include/Peice.h"  "include/King.h" "include/Loction.h" "include/Color.h" 
+"src/main.cpp" "src/Chess.cpp" "src/Peice.cpp" "src/Board.cpp"  "src/Rook.cpp" "src/King.cpp")
 
 
 add_subdirectory (include)

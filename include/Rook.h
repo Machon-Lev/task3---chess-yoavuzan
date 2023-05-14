@@ -1,12 +1,14 @@
+#pragma once
 #include "Peice.h"
+#include<vector>
+using std::vector;
+
 class Rook : public Peice
 {
 private:
 	bool isAlive = true;
-	vector<Loction> aviableMoves;
-	
 public:
 	Rook(Color type):Peice(type){}
-	bool move(int x, int y);
+	char GetPeice();
 
 };
