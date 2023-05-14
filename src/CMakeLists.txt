@@ -1,1 +1,1 @@
-﻿target_sources (chessProject PRIVATE "main.cpp")
+target_sources (Task3_Yoav_Uzan PRIVATE "main.cpp")

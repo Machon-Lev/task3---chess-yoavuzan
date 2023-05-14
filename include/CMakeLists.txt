@@ -1,1 +1,1 @@
-﻿target_include_directories (chessProject PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories (Task3_Yoav_Uzan PRIVATE ${CMAKE_CURRENT_LIST_DIR})
