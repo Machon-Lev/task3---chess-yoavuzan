@@ -9,6 +9,6 @@ private:
 	bool isAlive = true;
 public:
 	Rook(Color type):Peice(type){}
-	char GetPeice();
+	 char  GetPeice() override;
 
 };

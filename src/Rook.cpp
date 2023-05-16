@@ -1,6 +1,6 @@
 #include "Rook.h"
 
-char Rook:: GetPeice()
+ char Rook:: GetPeice() 
 {
 	if (GetColor() == Color::White)
 		return 'R';

@@ -9,6 +9,6 @@ private:
 public:
 	Peice(Color color);
 	Color GetColor(){ return color;}
-	virtual char GetPeice() = 0;
+	virtual char GetPeice() { return 'E';};
 
 };
