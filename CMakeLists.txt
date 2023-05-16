@@ -1,4 +1,5 @@
-﻿cmake_minimum_required (VERSION 3.15)
+
+cmake_minimum_required (VERSION 3.15)
 
 project (Task3_Yoav_Uzan)
 
@@ -21,10 +22,8 @@ add_executable (Task3_Yoav_Uzan "include/Chess.h" "include/Board.h" "include/Roo
 "include/Peice.h"  "include/King.h" "include/Loction.h" "include/Color.h" "include/Bishop.h" 
 "src/main.cpp" "src/Chess.cpp" "src/Peice.cpp" "src/Board.cpp"  "src/Rook.cpp" "src/King.cpp"
  "src/Bishop.cpp" "include/Queen.h" "src/Queen.cpp" "include/Knight.h" "include/Pawn.h")
+ 
 
 
 add_subdirectory (include)
 add_subdirectory (src)
-
-
-
