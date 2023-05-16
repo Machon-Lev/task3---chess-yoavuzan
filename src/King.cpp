@@ -1,9 +1,4 @@
 #include "King.h"
-int King::Move(Loction loc)
-{
-	return 0;
-}
-
 char King::GetPeice()
 {
 	if (GetColor() == Color::White)
@@ -11,3 +6,4 @@ char King::GetPeice()
 	else
 		return 'k';
 }
+

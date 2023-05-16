@@ -4,8 +4,8 @@
 #include"Peice.h"
 int main()
 {
-	//	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
-	string board = "##########K###############################R#############r#r#####";
+		string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
+	//string board = "#####b####K#####Q##########k#######B######R########q####r#r#####";
 	Board boardParm(board);
 	Chess a(board);
 	int codeResponse = 0;
@@ -40,7 +40,7 @@ int main()
 		/**/
 
 		a.setCodeResponse(codeResponse);
-		res = a.getInput(); 
+		res = a.getInput();
 	}
 
 	cout << endl << "Exiting " << endl; 

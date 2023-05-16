@@ -3,7 +3,7 @@ struct Loction
 {
 	char x = ' ';
 	int y = -1;
-	Loction(char x, int y) 
+	Loction(char x= ' ', int y= -1)
 	{
 		if (checkLoction(x, y))
 		{
