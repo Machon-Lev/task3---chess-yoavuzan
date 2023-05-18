@@ -13,24 +13,41 @@
 #include <vector>
 using std::vector;
 
+bool Board::checkRes11(Loction loc) {
+	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1] == nullptr)
+		return true;
+	return false;
+}
+bool Board::checkRes12(Loction loc) {
+	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetColor() != turn)
+		return true;
+	return false;
+}
+
 //get responce to the order
 int Board::getResponse(string order)
 {	
 	try
 	{
 		Loction loc(order[0], (static_cast<int>(order[1]) - 48) );
-		if (!checkPos(loc))
-		{
-			int res = createRes11or12(loc);
-			return res;
-		}
+		if(checkRes11(loc))
+			return 11;//there is no piece at the destination
+		if (checkRes12(loc))
+			return 12; //the piece in the source is piece of your opponent
 		Loction sourceLoc(order[2], static_cast<int>(order[3]) - 48);
 		if (checkPosForRes13(sourceLoc))
 			return 13;//there one of your pieces at the destination
 		if(checkIllegelMoveRes21(loc, sourceLoc))
 			return 21;//illegal movement of that piece
-		if(checkChess(loc, sourceLoc))
+		int res= checkChess(loc, sourceLoc);
+		if(res==31)
 			return 31;//this movement will cause you checkmate
+		if(res==41)
+		{
+			DoMove(loc, sourceLoc);
+			replaceTurn();
+			return 41;//the last movement was legal and cause check
+		}
 		DoMove(loc, sourceLoc);
 		replaceTurn();
 		return 42;//the last movement was legal, next turn
@@ -39,207 +56,41 @@ int Board::getResponse(string order)
 	{
 		throw e;
 	}
-
 }
-//check if the move is legal
-bool Board:: checkMoveForPawn(int placex, int placey, int destinationx, int destinationy){
-	//check if the move is legal for pawn
-		if (board[placex][placey]->GetColor() == Color::White)
-		{
-			if (placex == 1)
-			{
-				if (destinationx - placex > 2 ||   destinationx -placex < 1)
-					return true;
-			}
-			else
-			{
-				if (destinationx - placex   > 1 || destinationx - placex  < 1)
-					return true;
-			}
-		}
-		else
-		{
-			if (placex == 6)
-			{
-						if (placex - destinationx  > 2 || placex-destinationx < 1)
-							return true;
-			}
-			else
-			{
-						if (placex - destinationx  > 1 || placex - destinationx  < 1)
-							return true;
-			}
-		}
-		if(abs(placey-destinationy)>1)
-			return true;
-		//check if there is a piece in the way
-		if (board[destinationx][destinationy] != nullptr)
-		{
-			if (placey == destinationy)
-				return true;
-		}
-		if(board[destinationx][destinationy] == nullptr)
-			if (abs(placey- destinationy) == 1)
-				return true;
-	return false;
-}
-bool Board::checkMoveForKing(int placex,int placey, int destinationx, int destinationy)
-{
-	//check if the move is legal for king
-	if (abs(placex - destinationx) > 1 || abs(placey - destinationy) > 1)
-		return true;
-	//check if there is a piece in the way
-	if (board[destinationx][destinationy] != nullptr 
-		&& board[destinationx][destinationy]->GetColor() == board[placex][placey]->GetColor())
-		return true;
-	return false;
-}
-bool Board::checkMoveForRook(int placex, int placey, int destinationx,int destinationy)
-{
-	//check if the move is legal for rook
-	if (placex != destinationx && placey != destinationy)
-		return true;
-	//check if there is a piece in the way
-		if (placex == destinationx)
-		{
-			//check if there is a piece in the way for the y axis
-			if (placey > destinationy)
-			{
-				int start = placey - 1;
-				for (int i = start; i > destinationy; i--)
-				{
-					if (board[placex][i] != nullptr)
-						return true;
-				}
-			}
-			else
-			{
-				int start = placey + 1;
-				for (int i = start; i < destinationy; i++)
-				{
-					if (board[placex][i] != nullptr)
-						return true;
-				}
-			}
-		}
-		else
-		{
-			//check if there is a piece in the way for the x axis
-			if (placex > destinationx)
-			{
-				int start = placex - 1;
-				for (int i = start; i > destinationx; i--)
-				{
-					if (board[i][placey] != nullptr)
-						return true;
-				}
-			}
-			else
-			{
-				int start = placex + 1;
-				for (int i = start; i < destinationx; i++)
-				{
-					if (board[i][placey] != nullptr)
-						return true;
-				}
-			}
-		}
-		return false;
-}
-bool Board::checkMoveForBishop(int placex, int placey, int destinationx, int destinationy)
-{
-	//check if the move is legal for bishop
-	if (abs(placex - destinationx) != abs(placey - destinationy))
-		return true;
-	//check if there is a piece in the way
-	if (placex > destinationx)
-	{
-		if (placey > destinationy)
-		{
-			int startx = placex - 1;
-			int starty = placey - 1;
-			for (int i = startx, j = starty; i > destinationx && j > destinationy; i--, j--)
-			{
-				if (board[i][j] != nullptr )
-					return true;
-			}
-		}
-		else
-		{
-			int startx = placex - 1;
-			int starty = placey + 1;
-			for (int i = startx, j = starty; i > destinationx && j < destinationy; i--, j++)
-			{
-				if (board[i][j] != nullptr)
-					return true;
-			}
-		}
-	}
-	else
-	{
-		if (placey > destinationy)
-		{
-			int startx = placex + 1;
-			int starty = placey - 1;
-			for (int i = startx, j = starty; i < destinationx && j > destinationy; i++, j--)
-			{
-				if (board[i][j] != nullptr)
-					return true;
-			}
-		}
-		else
-		{
-			int startx = placex + 1;
-			int starty = placey + 1;
-			for (int i = startx, j = starty; i < destinationx && j < destinationy; i++, j++)
-			{
-				if (board[i][j] != nullptr)
-					return true;
-			}
-		}
-	}
-	return false;	
-}
-bool Board::checkMoveForKnight(int placex, int placey, int destinationx, int destinationy)
-{
-	//check if the move is legal for knight
-	if (abs(placex - destinationx) == 2 && abs(placey - destinationy) == 1)
-		return false;
-	if (abs(placex - destinationx) == 1 && abs(placey - destinationy) == 2)
-		return false;
-	return true;
-}
-bool Board::checkChess(Loction loc,Loction sourceLoc)
+int Board::checkChess(Loction loc,Loction sourceLoc)
 { 
 	vector<vector<Peice*>> tempBoard = board;
 	tempBoard[static_cast<int>(loc.x - 'a')][loc.y - 1] = nullptr;
 	tempBoard[static_cast<int>(sourceLoc.x - 'a')][sourceLoc.y - 1] = board[static_cast<int>(loc.x - 'a')][loc.y - 1];
 	Loction kingLocation;
+	bool flag = false;
 	//find the king location
 	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetPeice() != 'k'
 		&& board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetPeice() != 'K')
 	{
-		for (int i = 0; i < locOfKings.size(); i++)
-		{
-			int x = static_cast<int>(locOfKings[i].x - 'a');
-			int y = locOfKings[i].y - 1;
-			if (board[x][y]->GetColor() == turn)
-			{
-				kingLocation = Loction(locOfKings[i].x, locOfKings[i].y);
-				break;
-			}
-		}
+	int x = static_cast<int>(locOfKings[0].x - 'a');
+	int y = locOfKings[0].y - 1;
+	if(tempBoard[x][y]->GetColor() == turn)
+		kingLocation = Loction(locOfKings[0].x, locOfKings[0].y);
+	else
+		kingLocation = Loction(locOfKings[1].x, locOfKings[1].y);
 	}
 	else
 	{
-		kingLocation = Loction(sourceLoc.x, sourceLoc.y);
+		kingLocation = Loction(sourceLoc.x, sourceLoc.y);//check the move.
 	}
 	////check if the king is in danger
 	bool kingindanger = checkIfKingInDanger(kingLocation, turn, tempBoard);
 	if (kingindanger)
-		return true;
-	else
-		return false;
+		return 31;//this movement will cause you checkmate
+	if (kingLocation == sourceLoc)
+		kingLocation = loc;
+	kingLocation= kingLocation == locOfKings[0]? locOfKings[1] : locOfKings[0];
+	Color tempturn= turn== Color::White? Color::Black : Color::White;
+	kingindanger = checkIfKingInDanger(kingLocation, tempturn, tempBoard);
+	if (kingindanger)
+		return 41;//the last movement was legal and cause check
+	return 0;//the last movement was legal, next turn
  }
 // check if is illegal movement of that piece
 bool Board::checkIllegelMoveRes21(Loction place, Loction destination)
@@ -256,85 +107,73 @@ bool Board::checkIllegelMoveRes21(Loction place, Loction destination)
 	{
 		case 'R' :
 		{
-			bool ans = checkMoveForRook(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Rook*>(peice)->checkMoveForRook(placex, placey, destinationx, destinationy);
 			return ans;
 			break; 
 		}
 		case 'r':
 		{
-			bool ans = checkMoveForRook(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Rook*>(peice)->checkMoveForRook(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}
 		case 'B':
 		{
-			bool ans = checkMoveForBishop(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Bishop*>(peice)->checkMoveForBishop(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}
 		case 'b':
 		{
-			bool ans = checkMoveForBishop(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Bishop*>(peice)->checkMoveForBishop(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}
 		case 'Q':
 		{
-			bool ans = checkMoveForBishop(placex, placey, destinationx, destinationy);
-			if (!ans)
-				return ans;
-			else
-			{
-				ans = checkMoveForRook(placex, placey, destinationx, destinationy);
-				return ans;
-			}
+			bool ans = dynamic_cast<Queen*>(peice)->checkMoveForQueen(placex, placey, destinationx, destinationy);
+			return ans;
 			break;
 		}
 		case 'q':
 		{
-			bool ans = checkMoveForBishop(placex, placey, destinationx, destinationy);
-			if (!ans)
-				return ans;
-			else
-			{
-				ans = checkMoveForRook(placex, placey, destinationx, destinationy);
-				return ans;
-			}
+			bool ans = dynamic_cast<Queen*>(peice)->checkMoveForQueen(placex, placey, destinationx, destinationy);
+			return ans;
 			break;
 		}
 		case 'N':
 		{
-			bool ans = checkMoveForKnight(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Knight*>(peice)->checkMoveForKnight(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}
 		case 'n':
 		{
-			bool ans = checkMoveForKnight(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Knight*>(peice)->checkMoveForKnight(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}
 		case 'P':
 		{
-			bool ans = checkMoveForPawn(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Pawn*>(peice)->checkMoveForPawn(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}
 		case 'p':
 		{
-			bool ans = checkMoveForPawn(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Pawn*>(peice)->checkMoveForPawn(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}
 		case 'K':
 		{
-			bool ans = checkMoveForKing(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<King*>(peice)->checkMoveForKing(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}	
 		case 'k': 
 		{
-			bool ans = checkMoveForKing(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<King*>(peice)->checkMoveForKing(placex, placey, destinationx, destinationy);
 			return ans;
 			break;
 		}	
@@ -348,72 +187,13 @@ bool Board::checkIllegelMoveRes21(Loction place, Loction destination)
 }
 //check there one of your pieces at the destination
 bool Board::checkPosForRes13(Loction loc)
-{
-	//this function check if there is a piece in the given location
-	if (turn == Color::White)
-	{
-		for (int i = 0; i < whitePiceLoc.size(); i++)
-		{
-			if (whitePiceLoc[i] == loc)
-				return true;
-		}
-		return false;
-	}
-	else
-	{
-		for (int i = 0; i < blackPiceLoc.size(); i++)
-		{
-			if (blackPiceLoc[i] == loc)
-				return true;
-		}
-		return false;
-	}
-}
-// create response 11 or 12
-int Board::createRes11or12(Loction loc)
-{
-	if (turn == Color::White)
-	{
-		for (int i = 0; i < blackPiceLoc.size(); i++)
-		{
-			if (blackPiceLoc[i] == loc)
-				return 12;//there is a worng pice in the given location
-		}
-		return 11;//there is no pice in the given location
-	}
-	else
-	{
-		for (int i = 0; i < whitePiceLoc.size(); i++)
-		{
-			if (whitePiceLoc[i] == loc)
-				return 12;
-		}
-		return 11;
-	}
+{	//this function check if there is a piece in the given location
+	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1] != nullptr)
+		if (board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetColor() == turn)
+			return true;
+	return false;
 }
 //check if there is a worng pice in the given location
-bool Board::checkPos(Loction loc)
-{
-	//check the board if there is a pice in the given location
-	if (turn == Color::White)
-	{
-		for (int i = 0; i < whitePiceLoc.size(); i++)
-		{
-			if (whitePiceLoc[i] == loc)
-				return true;
-		}
-		return false;
-	}
-	else
-	{
-		for (int i = 0; i < blackPiceLoc.size(); i++)
-		{
-			if (blackPiceLoc[i] == loc)
-				return true;
-		}
-		return false;
-	}
-}
 //build the board
 Board::Board(string boardString)
 {
@@ -428,78 +208,64 @@ Board::Board(string boardString)
 			{
 			case 'R':
 			{
-				board[i][j] =  new Rook(Color::White);
-				whitePiceLoc.push_back(Loction((char)('a' + i), j + 1));
+				board[i][j] =  new Rook(Color::White,this);
 				break; 
 			}
 			case 'B':
 			{
-				board[i][j] = new Bishop(Color::White);
-				whitePiceLoc.push_back(Loction((char)('a' + i), j + 1));
+				board[i][j] = new Bishop(Color::White,this);
 				break;
 			}
 			case 'Q':
 			{
-				board[i][j] = new Queen(Color::White);
-				whitePiceLoc.push_back(Loction((char)('a' + i), j + 1));
+				board[i][j] = new Queen(Color::White,this);
 				break;
 			}
 			case 'N':
 			{
-					board[i][j] = new Knight(Color::White);
-					whitePiceLoc.push_back(Loction((char)('a' + i), j + 1));
+					board[i][j] = new Knight(Color::White, this);
 					break;
 			}
 			case 'K':
 			{
-			board[i][j] = new King(Color::White);
-			auto locKing = Loction((char)('a' + i), j + 1);
-			whitePiceLoc.push_back(locKing);
-			locOfKings.push_back(locKing);
+			board[i][j] = new King(Color::White, this);
+			locOfKings.push_back(Loction((char)('a' + i), j + 1));
 			break; 
 			}
 			case 'P':
 			{
-				board[i][j] = new Pawn(Color::White);
-				whitePiceLoc.push_back(Loction((char)('a' + i), j + 1));
+				board[i][j] = new Pawn(Color::White, this);
 				break;
 			}
 			case 'r':
 			{
-			board[i][j] = new Rook(Color::Black);
-			blackPiceLoc.push_back(Loction(static_cast<char>('a' + i), j + 1));
+			board[i][j] = new Rook(Color::Black, this);
 			break; 
 			}
 			case 'b':
 			{	
-			board[i][j] = new Bishop(Color::Black);
-			blackPiceLoc.push_back(Loction(static_cast<char>('a' + i), j + 1));
+			board[i][j] = new Bishop(Color::Black,this);
 			break; 
 			}
 			case 'q':
 			{
-				board[i][j] = new Queen(Color::Black);
-				blackPiceLoc.push_back(Loction(static_cast<char>('a' + i), j + 1));
+				board[i][j] = new Queen(Color::Black,this);
 				break; 
 			}
 			case 'n':
 			{
-					board[i][j] = new Knight(Color::Black);
-					blackPiceLoc.push_back(Loction(static_cast<char>('a' + i), j + 1));
+					board[i][j] = new Knight(Color::Black, this);
 					break;
 			}
 			case 'k':
 			{
-			board[i][j] = new King(Color::Black);
-			auto locKing = Loction(static_cast<char>('a' + i), j + 1);
-			blackPiceLoc.push_back(locKing);
-			locOfKings.push_back(locKing);
+			board[i][j] = new King(Color::Black, this);
+			locOfKings.push_back(Loction(static_cast<char>('a' + i), j + 1));
 			break; 
 			}
 			case 'p':
 			{
-				board[i][j] = new Pawn(Color::Black);
-				blackPiceLoc.push_back(Loction(static_cast<char>('a' + i), j + 1));
+				board[i][j] = new Pawn(Color::Black, this);
 				break;
 			}
 			default:
@@ -517,7 +283,6 @@ void Board::replaceTurn()
 //check if the king is in danger
 bool Board::checkIfKingInDanger(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard)
 {
-	
 	int KingLocx=KingLoc.x - 'a';
 	int KingLocy=KingLoc.y - 1;
 	if(dangerFromRookAndQueen(KingLocx,KingLocy,kingColor,tempBoard))
@@ -604,6 +369,7 @@ bool Board::dangerFromRookAndQueen(int KingLocx, int KingLocy, Color kingColor, 
 			else break;
 		}
 	}
+	return false;
 }
 // check if the king is in danger from the bishop and queen
 bool Board:: dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
@@ -678,6 +444,7 @@ bool Board:: dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColo
 			else break;
 		}
 	}
+	return false;
 }
 // check if the king is in danger from the pawn
 bool Board:: dangerFromPawn(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
@@ -715,10 +482,6 @@ bool Board:: dangerFromPawn(int KingLocx, int KingLocy, Color kingColor, vector<
 			}
 		}
 	}
-}
-// check if the king is in danger from the king
-bool Board::dangerFromKing(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
-{
 	//the king is in the first row
 	if (KingLocx == 0)
 	{
@@ -767,6 +530,49 @@ bool Board::dangerFromKing(int KingLocx, int KingLocy, Color kingColor, vector<v
 			}
 		}
 	}
+	return false;
+}
+
+bool isExist(int x, int y) {
+	if(x < 0 || x > 7 || y < 0 || y > 7)
+		return false;
+	return true;
+}
+
+// check if the king is in danger from the king
+bool Board::dangerFromKing(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
+{	
+	//check the row below the king
+	for (int i= KingLocy-1;i <KingLocy+2;i++)
+	{
+		if(isExist(KingLocx-1,i))
+			if (tempBoard[KingLocx - 1][i] != nullptr)
+				if (tempBoard[KingLocx - 1][i]->GetColor() != kingColor)
+					if (tempBoard[KingLocx - 1][i]->GetPeice() != 'k'||
+						tempBoard[KingLocx - 1][i]->GetPeice() != 'K')
+						return true;
+	}
+	//check the row above the king
+	for (int i = KingLocy - 1; i < KingLocy + 2; i++)
+	{
+		if (isExist(KingLocx + 1, i))
+			if (tempBoard[KingLocx + 1][i] != nullptr)
+				if (tempBoard[KingLocx + 1][i]->GetColor() != kingColor)
+					if (tempBoard[KingLocx + 1][i]->GetPeice() != 'k' ||
+						tempBoard[KingLocx + 1][i]->GetPeice() != 'K')
+						return true;
+	}
+	//check the row of the king
+	for (int i = KingLocy - 1; i < KingLocy + 2; i+=2)
+	{
+		if (isExist(KingLocx, i))
+			if (tempBoard[KingLocx][i] != nullptr)
+				if (tempBoard[KingLocx][i]->GetColor() != kingColor)
+					if (tempBoard[KingLocx][i]->GetPeice() != 'k' ||
+												tempBoard[KingLocx][i]->GetPeice() != 'K')
+						return true;
+	}
+	return false;
 }
 //update the board
 void Board:: DoMove(Loction loc, Loction sourceLoc)
@@ -776,37 +582,8 @@ void Board:: DoMove(Loction loc, Loction sourceLoc)
 	int locy = loc.y - 1;
 	int sourceLocx = static_cast<int>(sourceLoc.x - 'a');
 	int sourceLocy = sourceLoc.y - 1;
-	// if the pice eat another pice
-	if (board[sourceLocx][sourceLocy] != nullptr)
-		{
-			for (int i = 0; i < whitePiceLoc.size(); i++)
-				if (whitePiceLoc[i] == sourceLoc)
-					whitePiceLoc.erase(whitePiceLoc.begin() + i);
-			for (int i = 0; i < blackPiceLoc.size(); i++)
-				if (blackPiceLoc[i] == sourceLoc)
-					blackPiceLoc.erase(blackPiceLoc.begin() + i);
-		}
-	// update the pice location
-	if (GetTurn() == Color::White)
-		{
-			for (int i = 0; i < whitePiceLoc.size(); i++)
-			{
-				if (whitePiceLoc[i] == loc)
-					whitePiceLoc.erase(whitePiceLoc.begin() + i);
-			}
-			whitePiceLoc.push_back(sourceLoc);
-		}
-	else
-		{
-			for (int i = 0; i < blackPiceLoc.size(); i++)
-			{
-				if (blackPiceLoc[i] == loc)
-					blackPiceLoc.erase(blackPiceLoc.begin() + i);
-			}
-			blackPiceLoc.push_back(sourceLoc);
-		}
 	// if the pice is a king update the king location
-	if (board[locx][locy]->GetPeice() == 'k' && board[locx][locy]->GetPeice() == 'K')
+	if (board[locx][locy]->GetPeice() == 'k' || board[locx][locy]->GetPeice() == 'K')
 		{
 			for (int i=0;i<locOfKings.size();i++)
 				if (locOfKings[i]==loc)
@@ -825,6 +602,7 @@ Board::~Board()
 	for (auto row : board) {
 		for (auto obj : row) {
 			delete obj;
+			obj= nullptr;
 		}
 	}
 }

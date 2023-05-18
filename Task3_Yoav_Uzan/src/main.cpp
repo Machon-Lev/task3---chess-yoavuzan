@@ -4,8 +4,8 @@
 #include"Peice.h"
 int main()
 {
-		string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
-	//string board = "#####b####K#####Q##########k#######B######R########q####r#r#####";
+	//string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
+	string board = "##########K################k##############q#############Q#r#####";
 	Board boardParm(board);
 	Chess a(board);
 	int codeResponse = 0;
