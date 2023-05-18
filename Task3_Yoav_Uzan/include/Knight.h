@@ -2,14 +2,10 @@
 class Knight: public Peice
 {
 public:
-	Knight(Color color) :Peice(color) {};
+	Knight(Color color,Board* board) :Peice(color, board) {};
 	char GetPeice();
+	bool checkMoveForKnight(int placex, int placey, int destinationx, int destinationy);
+	// check if the position is legal for knight
 
 };
 
-char Knight::GetPeice() {
-	if (GetColor() == Color::White)
-		return 'N';
-	else
-		return 'n';
-}

@@ -17,10 +17,10 @@ if (MSVC)
     add_compile_options (/W4 /permissive- /Zc:externConstexpr /Zc:inline)
 endif ()
 
-add_executable (Task3_Yoav_Uzan "include/Chess.h" "include/Board.h" "include/Rook.h"
+add_executable (Task3_Yoav_Uzan  "include/Chess.h" "include/Board.h" "include/Rook.h" "include/Knight.h" "include/Pawn.h"
 "include/Peice.h"  "include/King.h" "include/Loction.h" "include/Color.h" "include/Bishop.h" 
-"src/main.cpp" "src/Chess.cpp" "src/Peice.cpp" "src/Board.cpp"  "src/Rook.cpp" "src/King.cpp"
- "src/Bishop.cpp" "include/Queen.h" "src/Queen.cpp" "include/Knight.h" "include/Pawn.h")
+ "src/Peice.cpp" "src/Board.cpp"  "src/Rook.cpp" "src/King.cpp" "src/main.cpp" "src/Chess.cpp"
+ "src/Bishop.cpp" "include/Queen.h" "src/Queen.cpp" "src/Pawn.cpp" "src/Knight.cpp")
 
 
 add_subdirectory (include)
