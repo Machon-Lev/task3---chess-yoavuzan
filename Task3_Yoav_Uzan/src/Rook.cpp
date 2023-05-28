@@ -7,30 +7,30 @@
 	else
 		return 'r';
 }
- bool Rook::checkMoveForRook(int placex, int placey, int destinationx, int destinationy)
+ bool Rook::checkMoveForRook(Loction place, Loction destination)
  {
 	 //check if the move is legal for rook
-	 if (placex != destinationx && placey != destinationy)
+	 if (place.compx  != destination.compx && place.compy != destination.compy)
 		 return true;
 	 //check if there is a piece in the way
-	 if (placex == destinationx)
+	 if (place.compx == destination.compx)
 	 {
 		 //check if there is a piece in the way for the y axis
-		 if (placey > destinationy)
+		 if (place.compy > destination.compy)
 		 {
-			 int start = placey - 1;
-			 for (int i = start; i > destinationy; i--)
+			 int start = place.compy - 1;
+			 for (int i = start; i > destination.compy; i--)
 			 {
-				 if ((*p_board)[placex][i] != nullptr)
+				 if ((*p_board)[place.compx][i] != nullptr)
 					 return true;
 			 }
 		 }
 		 else
 		 {
-			 int start = placey + 1;
-			 for (int i = start; i < destinationy; i++)
+			 int start = place.compy + 1;
+			 for (int i = start; i < destination.compy; i++)
 			 {
-				 if ((*p_board)[placex][i] != nullptr)
+				 if ((*p_board)[place.compx][i] != nullptr)
 					 return true;
 			 }
 		 }
@@ -38,21 +38,21 @@
 	 else
 	 {
 		 //check if there is a piece in the way for the x axis
-		 if (placex > destinationx)
+		 if (place.compx > destination.compx)
 		 {
-			 int start = placex - 1;
-			 for (int i = start; i > destinationx; i--)
+			 int start = place.compx - 1;
+			 for (int i = start; i > destination.compx; i--)
 			 {
-				 if ((*p_board)[i][placey] != nullptr)
+				 if ((*p_board)[i][place.compy] != nullptr)
 					 return true;
 			 }
 		 }
 		 else
 		 {
-			 int start = placex + 1;
-			 for (int i = start; i < destinationx; i++)
+			 int start = place.compx + 1;
+			 for (int i = start; i < destination.compx; i++)
 			 {
-				 if ((*p_board)[i][placey] != nullptr)
+				 if ((*p_board)[i][place.compy] != nullptr)
 					 return true;
 			 }
 		 }

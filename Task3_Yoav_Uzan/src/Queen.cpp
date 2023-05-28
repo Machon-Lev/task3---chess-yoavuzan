@@ -7,13 +7,13 @@ char Queen::GetPeice()
 		return 'q';
 }
 
-bool Queen::checkMoveForQueen(int placex, int placey, int destinationx, int destinationy)
+bool Queen::checkMoveForQueen(Loction place, Loction destination)
 {
 	Rook r(GetColor(), p_board);
-	if (!r.checkMoveForRook(placex, placey, destinationx, destinationy))
+	if (!r.checkMoveForRook(place, destination))
 		return false;
 	Bishop b(GetColor(), p_board);
-	if(!b.checkMoveForBishop(placex, placey, destinationx, destinationy))
+	if(!b.checkMoveForBishop(place, destination))
 		return false;
 	return true;
 }

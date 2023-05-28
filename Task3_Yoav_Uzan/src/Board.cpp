@@ -13,17 +13,17 @@
 #include <vector>
 using std::vector;
 
+
 bool Board::checkRes11(Loction loc) {
-	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1] == nullptr)
+	if (board[loc.compx][loc.compy] == nullptr)
 		return true;
 	return false;
 }
 bool Board::checkRes12(Loction loc) {
-	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetColor() != turn)
+	if (board[loc.compx][loc.compy]->GetColor() != turn)
 		return true;
 	return false;
 }
-
 //get responce to the order
 int Board::getResponse(string order)
 {	
@@ -60,16 +60,15 @@ int Board::getResponse(string order)
 int Board::checkChess(Loction loc,Loction sourceLoc)
 { 
 	vector<vector<Peice*>> tempBoard = board;
-	tempBoard[static_cast<int>(loc.x - 'a')][loc.y - 1] = nullptr;
-	tempBoard[static_cast<int>(sourceLoc.x - 'a')][sourceLoc.y - 1] = board[static_cast<int>(loc.x - 'a')][loc.y - 1];
+	tempBoard[loc.compx][loc.compy] = nullptr;
+	tempBoard[sourceLoc.compx][sourceLoc.compy] = board[loc.compx][loc.compy];
 	Loction kingLocation;
-	bool flag = false;
 	//find the king location
-	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetPeice() != 'k'
-		&& board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetPeice() != 'K')
+	if (board[loc.compx][loc.compy]->GetPeice() != 'k'
+		&& board[loc.compx][loc.compy]->GetPeice() != 'K')
 	{
-	int x = static_cast<int>(locOfKings[0].x - 'a');
-	int y = locOfKings[0].y - 1;
+	int x =locOfKings[0].compx;
+	int y = locOfKings[0].compy ;
 	if(tempBoard[x][y]->GetColor() == turn)
 		kingLocation = Loction(locOfKings[0].x, locOfKings[0].y);
 	else
@@ -97,83 +96,80 @@ bool Board::checkIllegelMoveRes21(Loction place, Loction destination)
 {
 	//this function check if the move is legal or not
 	// if it is illegal it return true else it return false
-	int placex = static_cast<int>(place.x - 'a');
-	int placey = place.y - 1;
-	int destinationx = static_cast<int>(destination.x - 'a');
-	int destinationy = destination.y - 1;
-	Peice* peice = board[placex][placey];
+	
+	Peice* peice = board[place.compx][place.compy];
 	char peiceName = peice->GetPeice();
 	switch (peiceName)
 	{
 		case 'R' :
 		{
-			bool ans = dynamic_cast<Rook*>(peice)->checkMoveForRook(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Rook*>(peice)->checkMoveForRook(place, destination);
 			return ans;
 			break; 
 		}
 		case 'r':
 		{
-			bool ans = dynamic_cast<Rook*>(peice)->checkMoveForRook(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Rook*>(peice)->checkMoveForRook(place, destination);
 			return ans;
 			break;
 		}
 		case 'B':
 		{
-			bool ans = dynamic_cast<Bishop*>(peice)->checkMoveForBishop(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Bishop*>(peice)->checkMoveForBishop(place, destination);
 			return ans;
 			break;
 		}
 		case 'b':
 		{
-			bool ans = dynamic_cast<Bishop*>(peice)->checkMoveForBishop(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Bishop*>(peice)->checkMoveForBishop(place, destination);
 			return ans;
 			break;
 		}
 		case 'Q':
 		{
-			bool ans = dynamic_cast<Queen*>(peice)->checkMoveForQueen(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Queen*>(peice)->checkMoveForQueen(place, destination);
 			return ans;
 			break;
 		}
 		case 'q':
 		{
-			bool ans = dynamic_cast<Queen*>(peice)->checkMoveForQueen(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Queen*>(peice)->checkMoveForQueen(place, destination);
 			return ans;
 			break;
 		}
 		case 'N':
 		{
-			bool ans = dynamic_cast<Knight*>(peice)->checkMoveForKnight(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Knight*>(peice)->checkMoveForKnight(place ,destination);
 			return ans;
 			break;
 		}
 		case 'n':
 		{
-			bool ans = dynamic_cast<Knight*>(peice)->checkMoveForKnight(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Knight*>(peice)->checkMoveForKnight(place, destination);
 			return ans;
 			break;
 		}
 		case 'P':
 		{
-			bool ans = dynamic_cast<Pawn*>(peice)->checkMoveForPawn(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Pawn*>(peice)->checkMoveForPawn(place, destination);
 			return ans;
 			break;
 		}
 		case 'p':
 		{
-			bool ans = dynamic_cast<Pawn*>(peice)->checkMoveForPawn(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<Pawn*>(peice)->checkMoveForPawn(place, destination);
 			return ans;
 			break;
 		}
 		case 'K':
 		{
-			bool ans = dynamic_cast<King*>(peice)->checkMoveForKing(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<King*>(peice)->checkMoveForKing(place, destination);
 			return ans;
 			break;
 		}	
 		case 'k': 
 		{
-			bool ans = dynamic_cast<King*>(peice)->checkMoveForKing(placex, placey, destinationx, destinationy);
+			bool ans = dynamic_cast<King*>(peice)->checkMoveForKing(place, destination);
 			return ans;
 			break;
 		}	
@@ -188,8 +184,8 @@ bool Board::checkIllegelMoveRes21(Loction place, Loction destination)
 //check there one of your pieces at the destination
 bool Board::checkPosForRes13(Loction loc)
 {	//this function check if there is a piece in the given location
-	if (board[static_cast<int>(loc.x - 'a')][loc.y - 1] != nullptr)
-		if (board[static_cast<int>(loc.x - 'a')][loc.y - 1]->GetColor() == turn)
+	if (board[loc.compx][loc.compy] != nullptr)
+		if (board[loc.compx][loc.compy]->GetColor() == turn)
 			return true;
 	return false;
 }
@@ -283,35 +279,69 @@ void Board::replaceTurn()
 //check if the king is in danger
 bool Board::checkIfKingInDanger(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard)
 {
-	int KingLocx=KingLoc.x - 'a';
-	int KingLocy=KingLoc.y - 1;
-	if(dangerFromRookAndQueen(KingLocx,KingLocy,kingColor,tempBoard))
+	if(dangerFromRookAndQueen(KingLoc,kingColor,tempBoard))
 		return true;
-	if (dangerFromBishopAndQueen(KingLocx, KingLocy, kingColor, tempBoard))
+	if (dangerFromBishopAndQueen(KingLoc, kingColor, tempBoard))
 		return true;
-	if (dangerFromPawn(KingLocx, KingLocy, kingColor, tempBoard))
+	if (dangerFromPawn(KingLoc, kingColor, tempBoard))
 		return true;
-	if(dangerFromKing(KingLocx, KingLocy, kingColor, tempBoard))
+	if(dangerFromKing(KingLoc, kingColor, tempBoard))
 		return true;
 	//check if the king is in check by knight
+	if(dangerFromKnight(KingLoc, kingColor, tempBoard))
 	return false;
 }
+
+//check if the king is in danger from the knight
+bool Board::dangerFromKnight(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard)
+{
+	int* arr = new int[2] {-1, 1};
+	int* widghandlen= new int [2]{2,-2};
+	for(int k=0;k<2;k++)
+		for (int i=0;i<2;i++)
+			for (int j = 0; j < 2; j++)
+				if (k == 0)// check the first option
+				{
+					int x = KingLoc.compx + arr[i];
+					int y = KingLoc.compy + widghandlen[j];
+					if (isExist(x,y))
+						if (tempBoard[x][y] != nullptr)
+							if (tempBoard[KingLoc.compx + arr[i]][KingLoc.compy + widghandlen[j]]->GetColor() != kingColor)
+								if (tempBoard[KingLoc.compx + arr[i]][KingLoc.compy + widghandlen[j]]->GetPeice() == 'N' ||
+									tempBoard[KingLoc.compx + arr[i]][KingLoc.compy + widghandlen[j]]->GetPeice() == 'n')
+									return true;
+				}
+				else// check the second option
+				{
+					int x = KingLoc.compx + widghandlen[i];
+					int y = KingLoc.compy + arr[j];
+					if (isExist(x,y))
+						if (tempBoard[KingLoc.compx + widghandlen[i]][KingLoc.compy + arr[j]] != nullptr)
+							if (tempBoard[KingLoc.compx + widghandlen[i]][KingLoc.compy + arr[j]]->GetColor() != kingColor)
+								if (tempBoard[KingLoc.compx + widghandlen[i]][KingLoc.compy + arr[j]]->GetPeice() == 'N' ||
+									tempBoard[KingLoc.compx + widghandlen[i]][KingLoc.compy + arr[j]]->GetPeice() == 'n')
+									return true;
+				}
+}
+
+
+
 // check if the king is in danger from the rook and queen
-bool Board::dangerFromRookAndQueen(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
+bool Board::dangerFromRookAndQueen(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard)
 {
 
 	//check for chess from rook or queen
 	//check down
-	for (int i = KingLocx + 1; i < 8; i++)
+	for (int i = KingLoc.compx + 1; i < 8; i++)
 	{
-		if (tempBoard[i][KingLocy] != nullptr)
+		if (tempBoard[i][KingLoc.compy] != nullptr)
 		{
-			if (tempBoard[i][KingLocy]->GetColor() != kingColor)
+			if (tempBoard[i][KingLoc.compy]->GetColor() != kingColor)
 			{
-				if (tempBoard[i][KingLocy]->GetPeice() == 'R' ||
-					tempBoard[i][KingLocy]->GetPeice() == 'r' ||
-					tempBoard[i][KingLocy]->GetPeice() == 'Q' ||
-					tempBoard[i][KingLocy]->GetPeice() == 'q')
+				if (tempBoard[i][KingLoc.compy]->GetPeice() == 'R' ||
+					tempBoard[i][KingLoc.compy]->GetPeice() == 'r' ||
+					tempBoard[i][KingLoc.compy]->GetPeice() == 'Q' ||
+					tempBoard[i][KingLoc.compy]->GetPeice() == 'q')
 					return true;
 				else break;
 			}
@@ -319,16 +349,16 @@ bool Board::dangerFromRookAndQueen(int KingLocx, int KingLocy, Color kingColor, 
 		}
 	}
 	//check up
-	for (int i = KingLocx - 1; i >= 0; i--)
+	for (int i = KingLoc.compx - 1; i >= 0; i--)
 	{
-		if (tempBoard[i][KingLocy] != nullptr)
+		if (tempBoard[i][KingLoc.compy] != nullptr)
 		{
-			if (tempBoard[i][KingLocy]->GetColor() != kingColor)
+			if (tempBoard[i][KingLoc.compy]->GetColor() != kingColor)
 			{
-				if (tempBoard[i][KingLocy]->GetPeice() == 'R' ||
-					tempBoard[i][KingLocy]->GetPeice() == 'r' ||
-					tempBoard[i][KingLocy]->GetPeice() == 'Q' ||
-					tempBoard[i][KingLocy]->GetPeice() == 'q')
+				if (tempBoard[i][KingLoc.compy]->GetPeice() == 'R' ||
+					tempBoard[i][KingLoc.compy]->GetPeice() == 'r' ||
+					tempBoard[i][KingLoc.compy]->GetPeice() == 'Q' ||
+					tempBoard[i][KingLoc.compy]->GetPeice() == 'q')
 					return true;
 				else break;
 			}
@@ -336,16 +366,16 @@ bool Board::dangerFromRookAndQueen(int KingLocx, int KingLocy, Color kingColor, 
 		}
 	}
 	//check left
-	for (int i = KingLocy + 1; i < 8; i++)
+	for (int i = KingLoc.compy + 1; i < 8; i++)
 	{
-		if (tempBoard[KingLocx][i] != nullptr)
+		if (tempBoard[KingLoc.compx][i] != nullptr)
 		{
-			if (tempBoard[KingLocx][i]->GetColor() != kingColor)
+			if (tempBoard[KingLoc.compx][i]->GetColor() != kingColor)
 			{
-				if (tempBoard[KingLocx][i]->GetPeice() == 'R' ||
-					tempBoard[KingLocx][i]->GetPeice() == 'r' ||
-					tempBoard[KingLocx][i]->GetPeice() == 'Q' ||
-					tempBoard[KingLocx][i]->GetPeice() == 'q')
+				if (tempBoard[KingLoc.compx][i]->GetPeice() == 'R' ||
+					tempBoard[KingLoc.compx][i]->GetPeice() == 'r' ||
+					tempBoard[KingLoc.compx][i]->GetPeice() == 'Q' ||
+					tempBoard[KingLoc.compx][i]->GetPeice() == 'q')
 					return true;
 				else break;
 			}
@@ -353,16 +383,16 @@ bool Board::dangerFromRookAndQueen(int KingLocx, int KingLocy, Color kingColor, 
 		}
 	}
 	//check right
-	for (int i = KingLocy - 1; i >= 0; i--)
+	for (int i = KingLoc.compy - 1; i >= 0; i--)
 	{
-		if (tempBoard[KingLocx][i] != nullptr)
+		if (tempBoard[KingLoc.compx][i] != nullptr)
 		{
-			if (tempBoard[KingLocx][i]->GetColor() != kingColor)
+			if (tempBoard[KingLoc.compx][i]->GetColor() != kingColor)
 			{
-				if (tempBoard[KingLocx][i]->GetPeice() == 'R' ||
-					tempBoard[KingLocx][i]->GetPeice() == 'r' ||
-					tempBoard[KingLocx][i]->GetPeice() == 'Q' ||
-					tempBoard[KingLocx][i]->GetPeice() == 'q')
+				if (tempBoard[KingLoc.compx][i]->GetPeice() == 'R' ||
+					tempBoard[KingLoc.compx][i]->GetPeice() == 'r' ||
+					tempBoard[KingLoc.compx][i]->GetPeice() == 'Q' ||
+					tempBoard[KingLoc.compx][i]->GetPeice() == 'q')
 					return true;
 				else break;
 			}
@@ -372,11 +402,11 @@ bool Board::dangerFromRookAndQueen(int KingLocx, int KingLocy, Color kingColor, 
 	return false;
 }
 // check if the king is in danger from the bishop and queen
-bool Board:: dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
+bool Board:: dangerFromBishopAndQueen(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard)
 {
 	//check for chess from bishop or queen
 	//check up right
-	for (int i = KingLocx + 1, j = KingLocy + 1; i < 8 && j < 8; i++, j++)
+	for (int i = KingLoc.compx + 1, j = KingLoc.compy + 1; i < 8 && j < 8; i++, j++)
 	{
 		if (tempBoard[i][j] != nullptr)
 		{
@@ -394,7 +424,7 @@ bool Board:: dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColo
 		}
 	}
 	//check up left
-	for (int i = KingLocx + 1, j = KingLocy - 1; i < 8 && j >= 0; i++, j--)
+	for (int i = KingLoc.compx + 1, j = KingLoc.compy - 1; i < 8 && j >= 0; i++, j--)
 	{
 		if (tempBoard[i][j] != nullptr)
 		{
@@ -411,7 +441,7 @@ bool Board:: dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColo
 		}
 	}
 	// check down right
-	for (int i = KingLocx - 1, j = KingLocy + 1; i >= 0 && j < 8; i--, j++)
+	for (int i = KingLoc.compx - 1, j = KingLoc.compy + 1; i >= 0 && j < 8; i--, j++)
 	{
 		if (tempBoard[i][j] != nullptr)
 		{
@@ -428,7 +458,7 @@ bool Board:: dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColo
 		}
 	}
 	// check down left
-	for (int i = KingLocx - 1, j = KingLocy - 1; i >= 0 && j >= 0; i--, j--)
+	for (int i = KingLoc.compx - 1, j = KingLoc.compy - 1; i >= 0 && j >= 0; i--, j--)
 	{
 		if (tempBoard[i][j] != nullptr)
 		{
@@ -447,129 +477,122 @@ bool Board:: dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColo
 	return false;
 }
 // check if the king is in danger from the pawn
-bool Board:: dangerFromPawn(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
+bool Board:: dangerFromPawn(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard)
 {
 	//check for chess from pawn
 	//the king is in the middle of the board
-	if (KingLocx != 0 && KingLocx != 7)
+	if (KingLoc.compx != 0 && KingLoc.compx != 7)
 	{
-		if (tempBoard[KingLocx][KingLocy]->GetColor() == Color::White)
+		if (tempBoard[KingLoc.compx][KingLoc.compy]->GetColor() == Color::White)
 		{
-			if (KingLocy != 7)//check if is not in the last row
+			if (KingLoc.compy != 7)//check if is not in the last row
 			{
-				if (tempBoard[KingLocx + 1][KingLocy + 1] != nullptr)
-					if (tempBoard[KingLocx + 1][KingLocy + 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx + 1][KingLocy + 1]->GetPeice() == 'p')
+				if (tempBoard[KingLoc.compx + 1][KingLoc.compy + 1] != nullptr)
+					if (tempBoard[KingLoc.compx + 1][KingLoc.compy + 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx + 1][KingLoc.compy + 1]->GetPeice() == 'p')
 							return true;
-				if (tempBoard[KingLocx + 1][KingLocy - 1] != nullptr)
-					if (tempBoard[KingLocx + 1][KingLocy - 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx + 1][KingLocy - 1]->GetPeice() == 'p')
+				if (tempBoard[KingLoc.compx + 1][KingLoc.compy - 1] != nullptr)
+					if (tempBoard[KingLoc.compx + 1][KingLoc.compy - 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx + 1][KingLoc.compy - 1]->GetPeice() == 'p')
 							return true;
 			}
 		}
 		else
 		{
-			if (KingLocy != 0)
+			if (KingLoc.compy != 0)
 			{
-				if (tempBoard[KingLocx - 1][KingLocy - 1] != nullptr)
-					if (tempBoard[KingLocx - 1][KingLocy - 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx - 1][KingLocy - 1]->GetPeice() == 'P')
+				if (tempBoard[KingLoc.compx - 1][KingLoc.compy - 1] != nullptr)
+					if (tempBoard[KingLoc.compx - 1][KingLoc.compy - 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx - 1][KingLoc.compy - 1]->GetPeice() == 'P')
 							return true;
-				if (tempBoard[KingLocx - 1][KingLocy + 1] != nullptr)
-					if (tempBoard[KingLocx - 1][KingLocy + 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx - 1][KingLocy + 1]->GetPeice() == 'p')
+				if (tempBoard[KingLoc.compx - 1][KingLoc.compy + 1] != nullptr)
+					if (tempBoard[KingLoc.compx - 1][KingLoc.compy + 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx - 1][KingLoc.compy + 1]->GetPeice() == 'p')
 							return true;
 			}
 		}
 	}
 	//the king is in the first row
-	if (KingLocx == 0)
+	if (KingLoc.compx == 0)
 	{
-		if (tempBoard[KingLocx][KingLocy]->GetColor() == Color::White)
+		if (tempBoard[KingLoc.compx][KingLoc.compy]->GetColor() == Color::White)
 		{
-			if (KingLocy != 7)//check if is not in the last row
+			if (KingLoc.compy != 7)//check if is not in the last row
 			{
-				if (tempBoard[KingLocx + 1][KingLocy + 1] != nullptr)
-					if (tempBoard[KingLocx + 1][KingLocy + 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx + 1][KingLocy + 1]->GetPeice() == 'p')
+				if (tempBoard[KingLoc.compx + 1][KingLoc.compy + 1] != nullptr)
+					if (tempBoard[KingLoc.compx + 1][KingLoc.compy + 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx + 1][KingLoc.compy + 1]->GetPeice() == 'p')
 							return true;
 			}
 		}
 		else
 		{
-			if (KingLocy != 0)
+			if (KingLoc.compy != 0)
 			{
-				if (tempBoard[KingLocx - 1][KingLocy - 1] != nullptr)
-					if (tempBoard[KingLocx - 1][KingLocy - 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx - 1][KingLocy - 1]->GetPeice() == 'P')
+				if (tempBoard[KingLoc.compx - 1][KingLoc.compy - 1] != nullptr)
+					if (tempBoard[KingLoc.compx - 1][KingLoc.compy - 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx - 1][KingLoc.compy - 1]->GetPeice() == 'P')
 							return true;
 			}
 		}
 	}
 	// the king is in the lust row
-	if (KingLocx == 7)
+	if (KingLoc.compx == 7)
 	{
-		if (tempBoard[KingLocx][KingLocy]->GetColor() == Color::White)
+		if (tempBoard[KingLoc.compx][KingLoc.compy]->GetColor() == Color::White)
 		{
-			if (KingLocx != 7)//check if is not in the last row
+			if (KingLoc.compx != 7)//check if is not in the last row
 			{
-				if (tempBoard[KingLocx + 1][KingLocy - 1] != nullptr)
-					if (tempBoard[KingLocx + 1][KingLocy - 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx + 1][KingLocy - 1]->GetPeice() == 'p')
+				if (tempBoard[KingLoc.compx + 1][KingLoc.compy - 1] != nullptr)
+					if (tempBoard[KingLoc.compx + 1][KingLoc.compy - 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx + 1][KingLoc.compy - 1]->GetPeice() == 'p')
 							return true;
 			}
 		}
 		else
 		{
-			if (KingLocx != 0)
+			if (KingLoc.compx != 0)
 			{
-				if (tempBoard[KingLocx - 1][KingLocy + 1] != nullptr)
-					if (tempBoard[KingLocx - 1][KingLocy + 1]->GetColor() != kingColor)
-						if (tempBoard[KingLocx - 1][KingLocy + 1]->GetPeice() == 'P')
+				if (tempBoard[KingLoc.compx - 1][KingLoc.compy + 1] != nullptr)
+					if (tempBoard[KingLoc.compx - 1][KingLoc.compy + 1]->GetColor() != kingColor)
+						if (tempBoard[KingLoc.compx - 1][KingLoc.compy + 1]->GetPeice() == 'P')
 							return true;
 			}
 		}
 	}
 	return false;
 }
-
-bool isExist(int x, int y) {
-	if(x < 0 || x > 7 || y < 0 || y > 7)
-		return false;
-	return true;
-}
-
 // check if the king is in danger from the king
-bool Board::dangerFromKing(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard)
+bool Board::dangerFromKing(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard)
 {	
 	//check the row below the king
-	for (int i= KingLocy-1;i <KingLocy+2;i++)
+	for (int i= KingLoc.compy-1;i <KingLoc.compy+2;i++)
 	{
-		if(isExist(KingLocx-1,i))
-			if (tempBoard[KingLocx - 1][i] != nullptr)
-				if (tempBoard[KingLocx - 1][i]->GetColor() != kingColor)
-					if (tempBoard[KingLocx - 1][i]->GetPeice() != 'k'||
-						tempBoard[KingLocx - 1][i]->GetPeice() != 'K')
+		if(isExist(KingLoc.compx-1,i))
+			if (tempBoard[KingLoc.compx - 1][i] != nullptr)
+				if (tempBoard[KingLoc.compx - 1][i]->GetColor() != kingColor)
+					if (tempBoard[KingLoc.compx - 1][i]->GetPeice() != 'k'||
+						tempBoard[KingLoc.compx - 1][i]->GetPeice() != 'K')
 						return true;
 	}
 	//check the row above the king
-	for (int i = KingLocy - 1; i < KingLocy + 2; i++)
+	for (int i = KingLoc.compy - 1; i < KingLoc.compy + 2; i++)
 	{
-		if (isExist(KingLocx + 1, i))
-			if (tempBoard[KingLocx + 1][i] != nullptr)
-				if (tempBoard[KingLocx + 1][i]->GetColor() != kingColor)
-					if (tempBoard[KingLocx + 1][i]->GetPeice() != 'k' ||
-						tempBoard[KingLocx + 1][i]->GetPeice() != 'K')
+		if (isExist(KingLoc.compx + 1, i))
+			if (tempBoard[KingLoc.compx + 1][i] != nullptr)
+				if (tempBoard[KingLoc.compx + 1][i]->GetColor() != kingColor)
+					if (tempBoard[KingLoc.compx + 1][i]->GetPeice() != 'k' ||
+						tempBoard[KingLoc.compx + 1][i]->GetPeice() != 'K')
 						return true;
 	}
 	//check the row of the king
-	for (int i = KingLocy - 1; i < KingLocy + 2; i+=2)
+	for (int i = KingLoc.compy - 1; i < KingLoc.compy + 2; i+=2)
 	{
-		if (isExist(KingLocx, i))
-			if (tempBoard[KingLocx][i] != nullptr)
-				if (tempBoard[KingLocx][i]->GetColor() != kingColor)
-					if (tempBoard[KingLocx][i]->GetPeice() != 'k' ||
-												tempBoard[KingLocx][i]->GetPeice() != 'K')
+		if (isExist(KingLoc.compx, i))
+			if (tempBoard[KingLoc.compx][i] != nullptr)
+				if (tempBoard[KingLoc.compx][i]->GetColor() != kingColor)
+					if (tempBoard[KingLoc.compx][i]->GetPeice() != 'k' ||
+												tempBoard[KingLoc.compx][i]->GetPeice() != 'K')
 						return true;
 	}
 	return false;
@@ -605,4 +628,9 @@ Board::~Board()
 			obj= nullptr;
 		}
 	}
+}
+bool Board::isExist(int x, int y) {
+	if (x < 0 || x > 7 || y < 0 || y > 7)
+		return false;
+	return true;
 }

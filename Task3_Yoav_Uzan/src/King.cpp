@@ -7,15 +7,15 @@ char King::GetPeice()
 		return 'k';
 }
 
-bool King::checkMoveForKing(int placex, int placey, int destinationx, int destinationy)
+bool King::checkMoveForKing(Loction place, Loction destination)
 {
 	//check if the move is legal for king
-	if (abs(placex - destinationx) > 1 || abs(placey - destinationy) > 1)
+	if (abs(place.compx - destination.compx) > 1 || abs(place.compy - destination.compy) > 1)
 		return true;
 
 	//check if there is a piece in the way
-	if ((*p_board)[destinationx][destinationy] != nullptr
-		&& (*p_board)[destinationx][destinationy]->GetColor() == (*p_board)[placex][placey]->GetColor())
+	if ((*p_board)[destination.compx][destination.compy] != nullptr
+		&& (*p_board)[destination.compx][destination.compy]->GetColor() == (*p_board)[place.compx][place.compy]->GetColor())
 		return true;
 	return false;
 }
