@@ -6,19 +6,19 @@ char Bishop::GetPeice()
 	else
 		return 'b';
 }
-bool Bishop::checkMoveForBishop(int placex, int placey, int destinationx, int destinationy)
+bool Bishop::checkMoveForBishop(Loction place, Loction destination)
 {
 	//check if the move is legal for bishop
-	if (abs(placex - destinationx) != abs(placey - destinationy))
+	if (abs(place.compx - destination.compx) != abs(place.compy - destination.compy))
 		return true;
 	//check if there is a piece in the way
-	if (placex > destinationx)
+	if (place.compx > destination.compx)
 	{
-		if (placey > destinationy)
+		if (place.compy > destination.compy)
 		{
-			int startx = placex - 1;
-			int starty = placey - 1;
-			for (int i = startx, j = starty; i > destinationx && j > destinationy; i--, j--)
+			int startx = place.compx - 1;
+			int starty = place.compy - 1;
+			for (int i = startx, j = starty; i > destination.compx && j > destination.compy; i--, j--)
 			{
 				if ((*p_board)[i][j] != nullptr)
 					return true;
@@ -26,9 +26,9 @@ bool Bishop::checkMoveForBishop(int placex, int placey, int destinationx, int de
 		}
 		else
 		{
-			int startx = placex - 1;
-			int starty = placey + 1;
-			for (int i = startx, j = starty; i > destinationx && j < destinationy; i--, j++)
+			int startx = place.compx - 1;
+			int starty = place.compy + 1;
+			for (int i = startx, j = starty; i > destination.compx && j < destination.compy; i--, j++)
 			{
 				if ((*p_board)[i][j] != nullptr)
 					return true;
@@ -37,11 +37,11 @@ bool Bishop::checkMoveForBishop(int placex, int placey, int destinationx, int de
 	}
 	else
 	{
-		if (placey > destinationy)
+		if (place.compy > destination.compy)
 		{
-			int startx = placex + 1;
-			int starty = placey - 1;
-			for (int i = startx, j = starty; i < destinationx && j > destinationy; i++, j--)
+			int startx = place.compx + 1;
+			int starty = place.compy - 1;
+			for (int i = startx, j = starty; i < destination.compx && j > destination.compy; i++, j--)
 			{
 				if ((*p_board)[i][j] != nullptr)
 					return true;
@@ -49,9 +49,9 @@ bool Bishop::checkMoveForBishop(int placex, int placey, int destinationx, int de
 		}
 		else
 		{
-			int startx = placex + 1;
-			int starty = placey + 1;
-			for (int i = startx, j = starty; i < destinationx && j < destinationy; i++, j++)
+			int startx = place.compx + 1;
+			int starty = place.compy + 1;
+			for (int i = startx, j = starty; i < destination.compx && j < destination.compy; i++, j++)
 			{
 				if ((*p_board)[i][j] != nullptr)
 					return true;

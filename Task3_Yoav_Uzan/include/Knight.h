@@ -4,7 +4,7 @@ class Knight: public Peice
 public:
 	Knight(Color color,Board* board) :Peice(color, board) {};
 	char GetPeice();
-	bool checkMoveForKnight(int placex, int placey, int destinationx, int destinationy);
+	bool checkMoveForKnight(Loction place, Loction destination);
 	// check if the position is legal for knight
 
 };

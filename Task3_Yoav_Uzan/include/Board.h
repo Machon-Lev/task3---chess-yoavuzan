@@ -21,12 +21,14 @@ private:
 	bool checkIllegelMoveRes21(Loction loc, Loction sourceLoc);// check if the position is legal for response 21
 	int checkChess(Loction loc, Loction sourceLoc);// check if the position is legal for response 31
 	bool checkIfKingInDanger(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger
-	bool dangerFromRookAndQueen(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger from rook or queen
-	bool dangerFromBishopAndQueen(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger from bishop or queen
-	bool dangerFromPawn(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger from pawn
-	bool dangerFromKing(int KingLocx, int KingLocy, Color kingColor, vector<vector<Peice*>> tempBoard);//check if the king is in danger from king
+	bool dangerFromRookAndQueen(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger from rook or queen
+	bool dangerFromBishopAndQueen(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger from bishop or queen
+	bool dangerFromPawn(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger from pawn
+	bool dangerFromKing(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard);//check if the king is in danger from king
+	bool dangerFromKnight(Loction KingLoc, Color kingColor, vector<vector<Peice*>> tempBoard);// check if the king is in danger from knight
 	void DoMove(Loction loc, Loction sourceLoc);// do the move
 	Color GetTurn() { return turn; }// get the turn
+	bool isExist(int x, int y);
 public:
 	auto operator[](int index) {return board[index].data();}// operator [][]
 	Board(string boardString);// constructor

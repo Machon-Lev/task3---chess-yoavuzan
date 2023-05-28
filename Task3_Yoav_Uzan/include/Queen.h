@@ -7,7 +7,7 @@ class Queen: public Peice
 {
 public:
 	Queen(Color color,Board* board ) :Peice(color, board) {};
-	bool checkMoveForQueen(int placex, int placey,int destinationx, int destinationy);
+	bool checkMoveForQueen(Loction place, Loction destination);
 	char GetPeice();
 };
 
