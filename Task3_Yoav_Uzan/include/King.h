@@ -5,6 +5,6 @@ class King : public Peice
 {
 public:
 	King(Color color,Board* board) :Peice(color, board) {};
-	bool checkMoveForKing(Loction place, Loction destination);
+	bool checkMoveForKing(int placex, int placey, int destinationx, int destinationy);
 	char GetPeice();
 };
