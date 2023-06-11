@@ -7,12 +7,12 @@ char Knight::GetPeice() {
 		return 'n';
 }
 
-bool Knight::checkMoveForKnight(Loction place, Loction destination)
+bool Knight::checkMoveForKnight(int placex, int placey, int destinationx, int destinationy)
 {
 	//check if the move is legal for knight
-	if (abs(place.compx - destination.compx) == 2 && abs(place.compy - destination.compy) == 1)
+	if (abs(placex - destinationx) == 2 && abs(placey - destinationy) == 1)
 		return false;
-	if (abs(place.compx - destination.compx) == 1 && abs(place.compy - destination.compy) == 2)
+	if (abs(placex - destinationx) == 1 && abs(placey - destinationy) == 2)
 		return false;
 	return true;
 }
